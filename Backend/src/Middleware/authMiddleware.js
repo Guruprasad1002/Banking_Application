@@ -4,27 +4,32 @@ import User from "../Models/userModel.js";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const protect = async (req, res, next) => {
-  const token = jwt.sign({ id: User._id }, JWT_SECRET, { expiresIn: "7d" });
+  let token;
 
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
+    token = req.headers.authorization.split(" ")[1];
+
     try {
-      token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, JWT_SECRET);
 
       req.user = await User.findById(decoded.id).select("-password");
+
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authorized, user not found" });
+      }
+
       next();
     } catch (error) {
       return res.status(401).json({ message: "Not authorized, token failed" });
     }
-  }
-
-  if (!token) {
+  } else {
     return res.status(401).json({ message: "Not authorized, no token" });
   }
 };
+
 
 export const authorizeRoles = (...roles) => {
     return (req, res, next) => {
