@@ -35,44 +35,79 @@ export const getTransactionHistory = async (req, res) => {
     }
   };
 
-export const lookupUserByEmail = async (req, res) => {
-  const { email } = req.query;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    const account = await Account.findOne({ userId: user._id });
-    if (!account) return res.status(404).json({ message: "Account not found" });
-
-    res.json({
-      name: user.name,
-      userId: user._id,
-      accountNumber: account.accountNumber,
-      branch: account.branch
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Lookup failed", error: err.message });
-  }
-};
-
-  export const transferFunds = async (req, res) => {
-    const { toUserId, amount, note } = req.body;
+  export const lookupUser = async (req, res) => {
+    const { accountNumber, email } = req.query;
   
     try {
-      const transaction = await Transaction.create({
-        fromUser: req.user._id,
-        toUser: toUserId,
-        amount,
-        note,
-        status: "Pending"
-      });
+      let account, user;
   
-      res.status(201).json({ message: "Transfer initiated", transaction });
-    } catch (error) {
-      res.status(500).json({ message: "Transfer failed", error: error.message });
+      if (accountNumber) {
+        account = await Account.findOne({ accountNumber });
+        if (!account) return res.status(404).json({ message: "Account not found" });
+  
+        user = await User.findById(account.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+      } else if (email) {
+        user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found" });
+  
+        account = await Account.findOne({ userId: user._id });
+        if (!account) return res.status(404).json({ message: "Account not found" });
+      } else {
+        return res.status(400).json({ message: "Please provide accountNumber or email" });
+      }
+  
+      res.json({
+        name: user.name,
+        userId: user._id,
+        accountNumber: account.accountNumber,
+        branch: account.branch,
+        email: user.email,
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Lookup failed", error: err.message });
     }
   };
+   
+
+export const transferFunds = async (req, res) => {
+  const { toUserId, amount, note } = req.body;
+
+  if (!amount || amount <= 0) {
+    return res.status(400).json({ message: "Invalid transfer amount" });
+  }
+
+  try {
+    const fromAcc = await Account.findOne({ userId: req.user._id });
+    const toAcc = await Account.findOne({ userId: toUserId });
+
+    if (!fromAcc || !toAcc) {
+      return res.status(404).json({ message: "One or both accounts not found" });
+    }
+
+    if (fromAcc.balance < amount) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+
+    fromAcc.balance -= amount;
+    toAcc.balance += amount;
+
+    await fromAcc.save();
+    await toAcc.save();
+
+    const transaction = await Transaction.create({
+      fromUser: req.user._id,
+      toUser: toUserId,
+      amount,
+      note,
+      status: "Approved"
+    });
+
+    res.status(201).json({ message: "Transfer successful", transaction });
+  } catch (error) {
+    res.status(500).json({ message: "Transfer failed", error: error.message });
+  }
+};
   
   export const applyLoan = async (req, res) => {
     const { amount, purpose, loanType, durationMonths, employment, income } = req.body;

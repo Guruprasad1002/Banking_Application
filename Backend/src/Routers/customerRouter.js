@@ -9,21 +9,19 @@ import {
   getCards, 
   addCard,
   blockCard,
-  lookupUserByEmail  
+  lookupUser
 } from "../Controllers/customerController.js";
 import verifyToken from "../Middleware/verifyToken.js";
 import verifyRole from "../Middleware/verifyRole.js";
-import User from "../Models/userModel.js";
 import { getSupportRequests } from "../Controllers/employeeController.js";
 
 const router = express.Router();
 
-// Middleware stack: [verifyToken, verifyRole(['customer'])]
 router.use(verifyToken, verifyRole(["customer"]));
 
 router.get("/account", getAccountDetails);
 router.get("/transactions", getTransactionHistory);
-router.get("/lookup", lookupUserByEmail);
+router.get("/lookup", lookupUser);
 router.post("/transfer", transferFunds);
 router.post("/loan", applyLoan);
 router.get("/support", getSupportRequests);

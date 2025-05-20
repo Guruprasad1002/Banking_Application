@@ -57,14 +57,14 @@ const AdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <Link
+          {/* <Link
             to="/admin/users"
             className="p-6 text-center transition bg-blue-100 shadow-md hover:bg-blue-200 rounded-xl"
           >
             <Users size={40} className="mx-auto mb-2 text-blue-600" />
             <h2 className="text-lg font-semibold text-blue-800">Manage Users</h2>
             <p className="text-sm text-gray-600">Edit or remove users</p>
-          </Link>
+          </Link> */}
 
           <Link
             to="/admin/add-employees"

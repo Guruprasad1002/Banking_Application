@@ -14,8 +14,6 @@ import VerifyTransactions from "./pages/employee/VerifyTransactions";
 import ManageUsers from "./pages/admin/ManageUsers";
 import ManageEmployees from "./pages/admin/ManageEmployees";
 import ViewReports from "./pages/admin/ViewReports";
-import Settings from "./pages/Settings";
-import Support from "./pages/Support";
 import './App.css'
 import OtpPage from "./pages/OtpPage";
 import CardServices from "./pages/customer/CardServices.jsx";
@@ -28,7 +26,6 @@ import EmployeeSupport from "./pages/employee/EmployeeSupport.jsx";
 import CustomerSupport from "./pages/customer/CustomerSupport.jsx";
 import AddBalance from "./pages/employee/AddBalance.jsx";
 import AddEmployee from "./pages/admin/AddEmployee.jsx";
-import ManageLoans from "./pages/admin/ManageLoans.jsx";
 import AdminLoans from "./pages/admin/AdminLoans.jsx";
 function App() {
   const location = useLocation();

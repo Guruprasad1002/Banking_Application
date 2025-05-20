@@ -46,16 +46,16 @@ const EmployeeDashboard = () => {
       hover: "hover:bg-orange-200",
       text: "text-orange-800"
     },
-    {
-      to: "/employee/transactions",
-      icon: <CreditCard size={32} className="text-purple-600" />,
-      label: "Verify Transactions",
-      description: "Review pending transactions",
-      count: transactions.length,
-      bg: "bg-purple-100",
-      hover: "hover:bg-purple-200",
-      text: "text-purple-800"
-    },
+    // {
+    //   to: "/employee/transactions",
+    //   icon: <CreditCard size={32} className="text-purple-600" />,
+    //   label: "Verify Transactions",
+    //   description: "Review pending transactions",
+    //   count: transactions.length,
+    //   bg: "bg-purple-100",
+    //   hover: "hover:bg-purple-200",
+    //   text: "text-purple-800"
+    // },
     {
       to: "/employee/loan-applications",
       icon: <CreditCard size={32} className="text-yellow-600" />,

@@ -5,11 +5,10 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Function to handle logo click and navigate to the user's dashboard
   const handleLogoClick = () => {
     if (user) {
-      const userRole = user.role; // Assuming 'role' is a property in your user object
-      navigate(`/${userRole}/dashboard`); // Navigate to the respective dashboard
+      const userRole = user.role; 
+      navigate(`/${userRole}/dashboard`); 
     }
   };
 

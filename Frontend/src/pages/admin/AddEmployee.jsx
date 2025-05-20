@@ -27,9 +27,7 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sending to backend:", formData);
     try {
-
       const res = await api.post("/admin/employees/add", formData);
       toast.success("Employee added successfully!");
       setFormData({

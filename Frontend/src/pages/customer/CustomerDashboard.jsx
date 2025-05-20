@@ -23,7 +23,7 @@ const CustomerDashboard = () => {
   const [account, setAccount] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showBalance, setShowBalance] = useState(true);
+  const [showBalance, setShowBalance] = useState(false);
   const [accountStatusMessage, setAccountStatusMessage] = useState("");
   const navigate = useNavigate();
   const linksDisabled = !account;

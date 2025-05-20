@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { LockIcon, Smartphone } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../authContext"; // adjust the path if needed
+import { useAuth } from "../authContext"; 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

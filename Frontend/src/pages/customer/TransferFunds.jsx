@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const TransferFunds = () => {
   const navigate = useNavigate();
-  const [recipientEmail, setRecipientEmail] = useState("");
+  const [recipientIdentifier, setRecipientIdentifier] = useState(""); 
   const [recipientInfo, setRecipientInfo] = useState(null);
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
@@ -15,14 +15,16 @@ const TransferFunds = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLookup = async () => {
-    if (!recipientEmail) return;
-
+    if (!recipientIdentifier) return;
+  
     setLoading(true);
     setRecipientInfo(null);
     setErrorMessage("");
-
+  
     try {
-      const res = await API.get(`/customer/lookup?email=${recipientEmail}`);
+      const isEmail = recipientIdentifier.includes("@");
+      const param = isEmail ? `email=${recipientIdentifier}` : `accountNumber=${recipientIdentifier}`;
+      const res = await API.get(`/customer/lookup?${param}`);
       setRecipientInfo(res.data);
       toast.success("Account found!");
     } catch (err) {
@@ -32,6 +34,7 @@ const TransferFunds = () => {
       setLoading(false);
     }
   };
+  
 
   const handleTransfer = async (e) => {
     e.preventDefault();
@@ -46,7 +49,7 @@ const TransferFunds = () => {
         toUserId: recipientInfo.userId,
         amount: numericAmount,
         note,
-      });
+      }); 
       toast.success("Transfer initiated successfully.");
       navigate("/customer/transactions");
     } catch (err) {
@@ -68,15 +71,15 @@ const TransferFunds = () => {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium text-gray-700">Recipient Email</label>
+          <label className="block mb-1 font-medium text-gray-700">Recipient Account Number or E-mail</label>
           <div className="flex gap-2">
             <input
-              type="email"
-              placeholder="Enter email"
+              type="text"
+              placeholder="Enter account number or Email"
               className="w-full px-4 py-2 border rounded focus:outline-none"
-              value={recipientEmail}
+              value={recipientIdentifier}
               onChange={(e) => {
-                setRecipientEmail(e.target.value);
+                setRecipientIdentifier(e.target.value);
                 setRecipientInfo(null);
                 setErrorMessage("");
               }}
@@ -132,8 +135,8 @@ const TransferFunds = () => {
           disabled={!recipientInfo || !amount}
           onClick={handleTransfer}
           className={`w-full py-2 font-semibold text-white rounded ${!recipientInfo || !amount
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-green-600 hover:bg-green-700"
             }`}
         >
           Transfer Now

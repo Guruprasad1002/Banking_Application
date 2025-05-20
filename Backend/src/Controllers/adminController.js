@@ -17,7 +17,7 @@ export const addEmployee = async (req, res) => {
       name,
       email,
       phone,
-      password,
+      password:hashedPassword,
       role: "employee",
     });
 
@@ -138,7 +138,6 @@ export const getWeeklyTransactions = async (req, res) => {
       },
     ]);
 
-    // Fill in missing days
     const formattedData = [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
